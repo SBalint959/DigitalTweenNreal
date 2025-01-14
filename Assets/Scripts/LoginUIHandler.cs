@@ -6,6 +6,7 @@ using TMPro;
 public class LoginUIHandler : MonoBehaviour
 {
     [SerializeField] private GameObject loginCanvas;
+    [SerializeField] private GameObject housePickCanvas;
     [SerializeField] private TMP_Text message;
     [SerializeField] private TMP_InputField usernameField; 
     [SerializeField] private TMP_InputField passwordField; 
@@ -48,6 +49,7 @@ public class LoginUIHandler : MonoBehaviour
     {
         // When successfully logged in turn off the canvas
         loginCanvas.SetActive(false);
+        housePickCanvas.SetActive(true);
         yield break;
     }
 
