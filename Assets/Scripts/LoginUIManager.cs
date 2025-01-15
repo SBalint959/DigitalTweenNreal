@@ -35,6 +35,8 @@ public class LoginUIManager : MonoBehaviour
             Debug.LogError("Username or password cannot be empty!");
             return;
         }
+        usernameField.text = "";
+        passwordField.text = "";
 
         // Call the LogIn method from LoginManager
         loginManager.LogIn(username, password);
