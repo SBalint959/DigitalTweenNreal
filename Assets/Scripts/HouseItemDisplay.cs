@@ -16,10 +16,12 @@ public class HouseItemDisplay : MonoBehaviour
         if (id != null)
         {
             id.text = "ID: " + houseItem.id;
+            id.fontSize = 12;
         }
         if (name != null)
         {
             name.text = houseItem.name;
+            name.fontSize = 12;
         }
     }
 }

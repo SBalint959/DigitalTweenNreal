@@ -1,18 +1,25 @@
 using UnityEngine;
 using NRKernal;
+
 public class StrictCameraFollower : MonoBehaviour
 {
-    private Transform cameraCenter { get { return NRInput.CameraCenter; } }
+    public Transform centerCamera; // Assign the center camera from the NRCameraRig
 
-    private Vector3 positionOffset;
-    private void Awake()
-    {
-        positionOffset = Vector3.zero;
-    }
+    [SerializeField] private float distanceFromCamera = 1.0f;
+    [SerializeField] private Vector3 offset = Vector3.zero; 
 
     void Update()
     {
-        transform.position = cameraCenter.position + positionOffset;
-        transform.rotation = cameraCenter.rotation;
+        if (centerCamera == null)
+        {
+            Debug.LogError("Center Camera not assigned!");
+            return;
+        }
+
+        Vector3 forwardPosition = centerCamera.position + centerCamera.forward * distanceFromCamera;
+
+        transform.position = forwardPosition + offset;
+
+        transform.rotation = Quaternion.LookRotation(transform.position - centerCamera.position);
     }
 }
