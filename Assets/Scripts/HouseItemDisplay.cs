@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class HouseItemDisplay : MonoBehaviour
 {
     [SerializeField] private TMP_Text id;
-    [SerializeField] private TMP_Text name;
+    [SerializeField] private TMP_Text username;
     [SerializeField] private Button selectButton;
 
     private BlueprintsInfo.Item houseItem;
@@ -23,10 +23,10 @@ public class HouseItemDisplay : MonoBehaviour
             id.text = "ID: " + houseItem.id;
             id.fontSize = 12;
         }
-        if (name != null)
+        if (username != null)
         {
-            name.text = houseItem.name;
-            name.fontSize = 12;
+            username.text = houseItem.name;
+            username.fontSize = 12;
         }
         if (selectButton != null)
         {
