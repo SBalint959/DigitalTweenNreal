@@ -64,6 +64,12 @@ public class LoginUIHandler : MonoBehaviour
         loginManager.LogIn(username, password);
     }
 
+    public void onFillInfoButtonClicked()
+    {
+        usernameField.text = "project";
+        passwordField.text = "glAR!1234";
+    }
+
     private void HandleLoginSuccess()
     {
         loginCanvas.SetActive(false);
