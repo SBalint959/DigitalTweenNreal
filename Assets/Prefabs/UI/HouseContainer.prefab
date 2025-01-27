@@ -93,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1
-  m_fontSizeBase: 1
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -407,8 +407,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: {fileID: 6448439546049414094}
-  name: {fileID: 1647831726575741580}
+  username: {fileID: 1647831726575741580}
   selectButton: {fileID: 4861356372082653333}
+  dummyPlane: {fileID: 0}
+  parentGO: {fileID: 0}
+  housePlacementController: {fileID: 5662406091318241488, guid: c0a42beaad35a17408e9ab1149eade2b,
+    type: 3}
 --- !u!1 &7842663447488087878
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,8 +506,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1
-  m_fontSizeBase: 1
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
