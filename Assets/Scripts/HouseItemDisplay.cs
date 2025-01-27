@@ -17,6 +17,8 @@ public class HouseItemDisplay : MonoBehaviour
     private BlueprintsInfo.Item houseItem;
     private LoginManager loginManager;
 
+    private bool spawningHouse;
+
     public HousePlacementController housePlacementController;
 
     public void Initialize(BlueprintsInfo.Item houseItem, LoginManager loginManager)
@@ -36,50 +38,77 @@ public class HouseItemDisplay : MonoBehaviour
         }
         if (selectButton != null)
         {
-            selectButton.onClick.AddListener(HandlePlacement);
+            selectButton.onClick.AddListener(OnSelectButtonClicked);
+        }
+
+        // parentGO = GameObject.FindGameObjectWithTag("Parent");
+        // dummyPlane = GameObject.FindGameObjectWithTag("Plane");
+
+        // if (parentGO == null)
+        // {
+        //     Debug.LogError("ParentGO not found! Ensure it has the tag 'Parent'.");
+        // }
+
+        // if (dummyPlane == null)
+        // {
+        //     Debug.LogError("DummyPlane not found! Ensure it has the tag 'Plane'.");
+        // }
+    }
+
+    private void OnSelectButtonClicked()
+    {
+        if (loginManager != null)
+        {
+            Debug.Log(id.text);
+            Debug.Log("Button inside!");
+            loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
+            // HandlePlacement();
         }
     }
 
-    // private void OnSelectButtonClicked()
-    // {
-    //     if (loginManager != null)
-    //     {
-    //         Debug.Log(id.text);
-    //         Debug.Log("Button inside!");
-    //         // loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
-    //         HandlePlacement();
+    // void Update() {
+    //     // Debug.Log($"{spawningHouse}");
+
+    //     if (spawningHouse) {
+    //         Debug.Log("Spawning house");
+
+
+    //         if (!NRInput.GetButtonDown(ControllerButton.TRIGGER))
+    //         {
+    //             Debug.Log($"Trigger not clicked");
+    //             return;
+    //         }
+    //         Debug.Log($"Trigger clicked");
+    //         var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
+    //         Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
+
+    //         // Perform a raycast
+    //         RaycastHit hitResult;
+    //         if (Physics.Raycast(new Ray(laserAnchor.position, laserAnchor.forward), out hitResult, 10))
+    //         {
+    //             if (hitResult.collider != null && hitResult.collider.gameObject == dummyPlane)
+    //             {
+    //                 // Move ParentGO to the hit position
+    //                 parentGO.transform.position = hitResult.point;
+    //                 parentGO.transform.rotation = Quaternion.identity; // Optional: Align to the plane's rotation
+
+    //                 Debug.Log($"House placed at: {hitResult.point}");
+
+    //                 loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
+    //             }
+    //         }
     //     }
+
+        
     // }
 
     public void HandlePlacement()
     {
-        // Check if the user clicks the trigger button
-        // if (NRInput.GetButtonDown(ControllerButton.TRIGGER))
-        // {
-        //     // Get controller laser origin
-        //     var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
-        //     Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
+        Debug.Log("Button clicked");
 
-        //     // Perform a raycast
-        //     RaycastHit hitResult;
-        //     if (Physics.Raycast(new Ray(laserAnchor.position, laserAnchor.forward), out hitResult, 10))
-        //     {
-        //         if (hitResult.collider != null && hitResult.collider.gameObject == dummyPlane)
-        //         {
-        //             // Move ParentGO to the hit position
-        //             parentGO.transform.position = hitResult.point;
-        //             parentGO.transform.rotation = Quaternion.identity; // Optional: Align to the plane's rotation
+        spawningHouse = true;
 
-        //             Debug.Log($"House placed at: {hitResult.point}");
-
-        //             // Exit placement mode and start house generation
-        //             // isPlacementMode = false;
-        //             // TriggerHouseGeneration();
-        //             loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
-        //         }
-        //     }
-        // }
-        housePlacementController.HandlePlacement(houseItem.id.ToString(), houseItem.name);
+        // housePlacementController.HandlePlacement(houseItem.id.ToString(), houseItem.name);
     }
 
     /// <summary>

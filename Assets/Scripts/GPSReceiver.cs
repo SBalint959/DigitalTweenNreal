@@ -30,7 +30,7 @@ public class GPSReceiver : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Received location: " + request.downloadHandler.text);
+            // Debug.Log("Received location: " + request.downloadHandler.text);
 
             // Parse JSON response (example: {"latitude": 45.812, "longitude": 15.956})
             GPSData gpsData = JsonUtility.FromJson<GPSData>(request.downloadHandler.text);

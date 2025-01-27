@@ -6,34 +6,37 @@ public class HousePlacementController : MonoBehaviour
     public GameObject dummyPlane; // Assign a dummy plane for testing
     public GameObject parentGO;   // The ParentGO (root of the house model)
     private LoginManager loginManager;
-    // public JSONPasrser jsonParser; // Reference to JSONParser for triggering house generation
+    private bool spawningHouse;
+    private string idLocal;
+    private string nameLocal;
 
-//     private bool isPlacementMode = false; // Whether the app is in placement mode
-
-//     void Update()
-//     {
-//         if (isPlacementMode)
-//         {
-//             HandlePlacement();
-//         }
-//     }
-
-//     /// <summary>
-//     /// Enters placement mode when the user clicks the "Create" button.
-//     /// </summary>
-//     public void StartPlacementMode()
-//     {
-//         isPlacementMode = true;
-//         Debug.Log("Placement mode started. Point and click to place the house.");
-//     }
-
-    public void HandlePlacement(string id, string name)
+    void Start()
     {
-//         // Check if the user clicks the trigger button
-//         if (NRInput.GetButtonDown(ControllerButton.TRIGGER))
+        // Find ParentGO and DummyPlane by their tags
+        parentGO = GameObject.FindGameObjectWithTag("Parent");
+        dummyPlane = GameObject.FindGameObjectWithTag("Plane");
+
+        if (parentGO == null)
         {
-            Debug.Log($"Inside HandlePlacement");
-            // Get controller laser origin
+            Debug.LogError("ParentGO not found! Ensure it has the tag 'Parent'.");
+        }
+
+        if (dummyPlane == null)
+        {
+            Debug.LogError("DummyPlane not found! Ensure it has the tag 'Plane'.");
+        }
+    }
+    void Update() {
+        // Debug.Log($"{spawningHouse}");
+
+        if (spawningHouse) {
+            Debug.Log("Spawning house");
+            if (!NRInput.GetButtonDown(ControllerButton.TRIGGER))
+            {
+                Debug.Log($"Trigger not clicked");
+                return;
+            }
+            Debug.Log($"Trigger clicked");
             var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
             Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
 
@@ -49,30 +52,25 @@ public class HousePlacementController : MonoBehaviour
 
                     Debug.Log($"House placed at: {hitResult.point}");
 
-                    // Exit placement mode and start house generation
-                    // isPlacementMode = false;
-                    // TriggerHouseGeneration();
-                    loginManager.GetBlueprint(id, name);
+                    loginManager.GetBlueprint(idLocal, nameLocal);
                 }
             }
         }
+
+        
+    }
+
+    public void HandlePlacement(string id, string name)
+    {
+
+        // Debug.Log($"Inside HandlePlacement");
+
+        spawningHouse = true;
+
+        idLocal = id;
+        nameLocal = name;
+        Debug.Log($"spawningHouse is now: {spawningHouse}");
+        // Debug.Log($"Plane: {parentGO.name}");
+
     }
 }
-
-//     /// <summary>
-//     /// Triggers the JSONParser to invoke house generation.
-//     /// </summary>
-//     private void TriggerHouseGeneration()
-//     {
-//         if (jsonParser != null)
-//         {
-//             // Simulate the house generation by re-invoking the JSONParser's parsing process
-//             jsonParser.ParseJson(jsonParser.GetCurrentJson()); // Assumes JSONPasrser has a way to get the current JSON
-//             Debug.Log("House generation triggered via JSONParser.");
-//         }
-//         else
-//         {
-//             Debug.LogError("JSONParser reference is not assigned!");
-//         }
-//     }
-// }
