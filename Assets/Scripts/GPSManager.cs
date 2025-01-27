@@ -1,10 +1,16 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class GPSManager : MonoBehaviour
 {
+    [SerializeField] private TMP_Text statusMessage;
+
     public float latitude;
     public float longitude;
+
+    private float mockLatitude = 420.6969f;
+    private float mockLongitude = 69.3333f;
 
     public void StartGPS()
     {
@@ -15,6 +21,7 @@ public class GPSManager : MonoBehaviour
     {
         if (!Input.location.isEnabledByUser)
         {
+            statusMessage.text = "Location services are not enabled by the user.";
             Debug.LogError("Location services are not enabled by the user.");
             yield break;
         }
@@ -30,12 +37,14 @@ public class GPSManager : MonoBehaviour
 
         if (maxWait <= 0)
         {
+            statusMessage.text = "Timed out initializing location services.";
             Debug.LogError("Timed out initializing location services.");
             yield break;
         }
 
         if (Input.location.status == LocationServiceStatus.Failed)
         {
+            statusMessage.text = "Failed to determine device location.";
             Debug.LogError("Failed to determine device location.");
             yield break;
         }
@@ -43,6 +52,7 @@ public class GPSManager : MonoBehaviour
         {
             latitude = Input.location.lastData.latitude;
             longitude = Input.location.lastData.longitude;
+            statusMessage.text = $"Location: {latitude}, {longitude}";
             Debug.Log($"Location: {latitude}, {longitude}");
             SendLocationToNReal(latitude, longitude);
         }
@@ -50,9 +60,14 @@ public class GPSManager : MonoBehaviour
         Input.location.Stop();
     }
 
-    private void SendLocationToNReal(double latitude, double longitude)
+    private void SendLocationToNReal(float latitude, float longitude)
     {
         Debug.Log($"Sending Location: {latitude}, {longitude} to NReal app...");
-        GetComponent<GPSClient>().SendGPSCoordinates(latitude, longitude);
+        GetComponent<GPSSender>().SendLocation(latitude, longitude);
+    }
+
+    public void SendMockLocation()
+    {
+        SendLocationToNReal(mockLatitude, mockLongitude);
     }
 }

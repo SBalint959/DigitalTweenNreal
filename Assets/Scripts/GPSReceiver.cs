@@ -1,50 +1,53 @@
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class GPSReceiver : MonoBehaviour
 {
-    public int listenPort = 5555; // Port to listen on
-
-    private UdpClient udpClient;
-    private Thread receiveThread;
-    private bool isRunning = true;
+    private string serverUrl = "https://diplomskiprojektpythonserver.onrender.com/get";
+    private float fetchInterval = 10.0f; // Time interval to fetch data (in seconds).
 
     void Start()
     {
-        udpClient = new UdpClient(listenPort);
-        receiveThread = new Thread(ReceiveData);
-        receiveThread.IsBackground = true;
-        receiveThread.Start();
-        Debug.Log("UDP Server started, listening on port " + listenPort);
+        StartCoroutine(FetchLocationPeriodically());
     }
 
-    void ReceiveData()
+    private IEnumerator FetchLocationPeriodically()
     {
-        while (isRunning)
+        while (true)
         {
-            try
-            {
-                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
-                byte[] data = udpClient.Receive(ref remoteEndPoint);
-                string receivedMessage = Encoding.UTF8.GetString(data);
-
-                Debug.Log("Received GPS data: " + receivedMessage);
-                // Process the received GPS data as needed
-            }
-            catch (SocketException ex)
-            {
-                Debug.LogError("Socket exception: " + ex.Message);
-            }
+            yield return StartCoroutine(FetchLocationCoroutine());
+            yield return new WaitForSeconds(fetchInterval);
         }
     }
 
-    void OnApplicationQuit()
+    private IEnumerator FetchLocationCoroutine()
     {
-        isRunning = false;
-        udpClient.Close();
-        receiveThread.Abort();
+        UnityWebRequest request = UnityWebRequest.Get(serverUrl);
+
+        // Send GET request
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("Received location: " + request.downloadHandler.text);
+
+            // Parse JSON response (example: {"latitude": 45.812, "longitude": 15.956})
+            GPSData gpsData = JsonUtility.FromJson<GPSData>(request.downloadHandler.text);
+            Debug.Log("Latitude: " + gpsData.X + ", Longitude: " + gpsData.Z);
+
+            // You can now use the latitude and longitude in your app.
+        }
+        else
+        {
+            Debug.LogError("Error fetching location: " + request.error);
+        }
+    }
+
+    [System.Serializable]
+    private class GPSData
+    {
+        public float X;
+        public float Z;
     }
 }
