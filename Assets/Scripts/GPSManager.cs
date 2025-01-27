@@ -3,24 +3,15 @@ using System.Collections;
 
 public class GPSManager : MonoBehaviour
 {
-    public static GPSManager Instance { get; private set; }
     public float latitude;
     public float longitude;
 
-    private void Awake()
+    public void StartGPS()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        StartCoroutine(GetLocation());
     }
 
-    IEnumerator  Start()
+    IEnumerator GetLocation()
     {
         if (!Input.location.isEnabledByUser)
         {
@@ -53,6 +44,15 @@ public class GPSManager : MonoBehaviour
             latitude = Input.location.lastData.latitude;
             longitude = Input.location.lastData.longitude;
             Debug.Log($"Location: {latitude}, {longitude}");
+            SendLocationToNReal(latitude, longitude);
         }
+
+        Input.location.Stop();
+    }
+
+    private void SendLocationToNReal(double latitude, double longitude)
+    {
+        Debug.Log($"Sending Location: {latitude}, {longitude} to NReal app...");
+        GetComponent<GPSClient>().SendGPSCoordinates(latitude, longitude);
     }
 }
