@@ -9,8 +9,8 @@ public class GPSManager : MonoBehaviour
     public float latitude;
     public float longitude;
 
-    private float mockLatitude = 420.6969f;
-    private float mockLongitude = 69.3333f;
+    private float mockLatitude = 45.812992f;
+    private float mockLongitude = 15.956564f;
 
     public void StartGPS()
     {

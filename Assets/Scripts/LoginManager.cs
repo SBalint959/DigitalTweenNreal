@@ -29,7 +29,10 @@ public class LoginManager : MonoBehaviour
     public Action<string> SaveToken;
     public Action<BlueprintInf> BlueprintInformation;
 
-
+    public string getActiveHouseJSON()
+    {
+        return blueprintInf.data.blueprint.contentVR;
+    }
 
 
     /// <summary>

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Plane
   - Parent
+  - HouseController
   layers:
   - Default
   - TransparentFX

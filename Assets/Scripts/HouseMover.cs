@@ -1,16 +1,23 @@
 using UnityEngine;
 using NRKernal;
+using System.Collections;
 
 public class HouseMover : MonoBehaviour
 {
+    [SerializeField] private GameObject cameraRig;
+
     public Transform houseTransform; // The Transform of the house to move
     public float moveSpeed = 1.0f; // Speed of movement
+
+    public bool isHouseLocked = false;
 
     private Vector2 touchpadPosition; // Current touchpad position
     private bool isTouchpadPressed; // Whether the touchpad is pressed
 
     void Update()
     {
+        if (isHouseLocked) return; // available only when house is not locked
+
         // Check for input from the Nreal controller
         HandleControllerInput();
 
@@ -65,17 +72,24 @@ public class HouseMover : MonoBehaviour
             houseTransform.Rotate(Vector3.up, 90 * Time.deltaTime);
         }
 
+        float cameraAngleY = cameraRig.transform.rotation.eulerAngles.y;
+        moveDirection = new Vector3(Mathf.Cos(cameraAngleY * Mathf.Deg2Rad) * moveDirection.x + Mathf.Sin(cameraAngleY * Mathf.Deg2Rad) * moveDirection.z,
+                                    0,
+                                    Mathf.Cos(cameraAngleY * Mathf.Deg2Rad) * moveDirection.z - Mathf.Sin(cameraAngleY * Mathf.Deg2Rad) * moveDirection.x);
 
         // Apply movement
-        houseTransform.position += moveDirection * moveSpeed * Time.deltaTime;
+        houseTransform.position += moveSpeed * Time.deltaTime * moveDirection;
     }
 
     private void MoveHouse(Vector2 input)
     {
         // Calculate movement direction based on touchpad input
-        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
+        float cameraAngleY = cameraRig.transform.rotation.eulerAngles.y;
+        Vector3 moveDirection = new Vector3(Mathf.Cos(cameraAngleY * Mathf.Deg2Rad) * input.x + Mathf.Sin(cameraAngleY * Mathf.Deg2Rad) * input.y, 
+                                            0, 
+                                            Mathf.Cos(cameraAngleY * Mathf.Deg2Rad) * input.y - Mathf.Sin(cameraAngleY * Mathf.Deg2Rad) * input.x);
 
         // Apply movement to the house
-        houseTransform.position += moveDirection * moveSpeed * Time.deltaTime;
+        houseTransform.position += moveSpeed * Time.deltaTime * moveDirection;
     }
 }

@@ -6,6 +6,7 @@ public class GPSReceiver : MonoBehaviour
 {
     private string serverUrl = "https://diplomskiprojektpythonserver.onrender.com/get";
     private float fetchInterval = 10.0f; // Time interval to fetch data (in seconds).
+    public GPSData gpsData;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class GPSReceiver : MonoBehaviour
             // Parse JSON response (example: {"latitude": 45.812, "longitude": 15.956})
             GPSData gpsData = JsonUtility.FromJson<GPSData>(request.downloadHandler.text);
             Debug.Log("Latitude: " + gpsData.X + ", Longitude: " + gpsData.Z);
+            this.gpsData = gpsData;
 
             // You can now use the latitude and longitude in your app.
         }
@@ -45,7 +47,7 @@ public class GPSReceiver : MonoBehaviour
     }
 
     [System.Serializable]
-    private class GPSData
+    public class GPSData
     {
         public float X;
         public float Z;

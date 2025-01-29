@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -9,22 +9,33 @@ public class HouseItemDisplay : MonoBehaviour
 {
     [SerializeField] private TMP_Text id;
     [SerializeField] private TMP_Text username;
-    [SerializeField] private Button selectButton;
+    [SerializeField] private Button createButton;
+    [SerializeField] private Button lockButton;
 
     public GameObject dummyPlane; // Assign a dummy plane for testing
     public GameObject parentGO;   // The ParentGO (root of the house model)
 
     private BlueprintsInfo.Item houseItem;
     private LoginManager loginManager;
+    private HouseMover houseMover;
+    private JSONSender jsonSender;
+    private GPSReceiver.GPSData gpsData;
 
     private bool spawningHouse;
 
     public HousePlacementController housePlacementController;
 
-    public void Initialize(BlueprintsInfo.Item houseItem, LoginManager loginManager)
+    public void Initialize(BlueprintsInfo.Item houseItem, 
+                           LoginManager loginManager, 
+                           HouseMover houseMover,
+                           JSONSender jsonSender,
+                           GPSReceiver.GPSData gpsData)
     {
         this.houseItem = houseItem;
         this.loginManager = loginManager;
+        this.houseMover = houseMover;
+        this.jsonSender = jsonSender;
+        this.gpsData = gpsData;
 
         if (id != null)
         {
@@ -36,18 +47,18 @@ public class HouseItemDisplay : MonoBehaviour
             username.text = houseItem.name;
             username.fontSize = 12;
         }
-        if (selectButton != null)
+        if (createButton != null)
         {
-            selectButton.onClick.AddListener(OnSelectButtonClicked);
+            createButton.onClick.AddListener(OncreateButtonClicked);
         }
 
-        // parentGO = GameObject.FindGameObjectWithTag("Parent");
+        parentGO = GameObject.FindGameObjectWithTag("Parent");
         // dummyPlane = GameObject.FindGameObjectWithTag("Plane");
 
-        // if (parentGO == null)
-        // {
-        //     Debug.LogError("ParentGO not found! Ensure it has the tag 'Parent'.");
-        // }
+        if (parentGO == null)
+        {
+            Debug.LogError("ParentGO not found! Ensure it has the tag 'Parent'.");
+        }
 
         // if (dummyPlane == null)
         // {
@@ -55,52 +66,76 @@ public class HouseItemDisplay : MonoBehaviour
         // }
     }
 
-    private void OnSelectButtonClicked()
+    private void OncreateButtonClicked()
     {
         if (loginManager != null)
         {
             Debug.Log(id.text);
             Debug.Log("Button inside!");
             loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
-            // HandlePlacement();
+            //HandlePlacement();
+            createButton.gameObject.SetActive(false);
+            lockButton.gameObject.SetActive(true);
+            lockButton.onClick.AddListener(OnLockButtonClicked);
         }
     }
 
-    // void Update() {
-    //     // Debug.Log($"{spawningHouse}");
+    private void OnLockButtonClicked()
+    {
+        // disable house movement
+        houseMover.isHouseLocked = true;
+        // get geolocation
+        // put geolocation inside the house json
+        string json = loginManager.getActiveHouseJSON();
+        //.Replace("−", "-");
+        // send final json to server
+        string finalJson = "{\"GPS\":{\"X\":" + gpsData.X.ToString() + ",\"Z\":" + gpsData.Z.ToString() + "}," + json.Substring(1);
+        jsonSender.SendJSON("model.json", finalJson);
+        createButton.gameObject.SetActive(true);
+        lockButton.gameObject.SetActive(false);
+    }
 
-    //     if (spawningHouse) {
-    //         Debug.Log("Spawning house");
+    void Update()
+    {
+        // Debug.Log($"{spawningHouse}");
+
+        if (spawningHouse)
+        {
+            Debug.Log("Spawning house");
 
 
-    //         if (!NRInput.GetButtonDown(ControllerButton.TRIGGER))
-    //         {
-    //             Debug.Log($"Trigger not clicked");
-    //             return;
-    //         }
-    //         Debug.Log($"Trigger clicked");
-    //         var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
-    //         Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
+            if (!NRInput.GetButtonDown(ControllerButton.TRIGGER))
+            {
+                Debug.Log($"Trigger not clicked");
+                return;
+            }
+            Debug.Log($"Trigger clicked");
+            var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
+            Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
 
-    //         // Perform a raycast
-    //         RaycastHit hitResult;
-    //         if (Physics.Raycast(new Ray(laserAnchor.position, laserAnchor.forward), out hitResult, 10))
-    //         {
-    //             if (hitResult.collider != null && hitResult.collider.gameObject == dummyPlane)
-    //             {
-    //                 // Move ParentGO to the hit position
-    //                 parentGO.transform.position = hitResult.point;
-    //                 parentGO.transform.rotation = Quaternion.identity; // Optional: Align to the plane's rotation
+            // Perform a raycast
+            RaycastHit hitResult;
+            if (Physics.Raycast(new Ray(laserAnchor.transform.position, laserAnchor.transform.forward), out hitResult, 10))
+            {
+                if (hitResult.collider.gameObject != null && hitResult.collider.gameObject.GetComponent<NRTrackableBehaviour>() != null)
+                {
+                    var behaviour = hitResult.collider.gameObject.GetComponent<NRTrackableBehaviour>();
+                    if (behaviour.Trackable.GetTrackableType() != TrackableType.TRACKABLE_PLANE)
+                    {
+                        return;
+                    }
+                    parentGO.transform.position = hitResult.point;
+                    parentGO.transform.rotation = Quaternion.identity; // Optional: Align to the plane's rotation
 
-    //                 Debug.Log($"House placed at: {hitResult.point}");
+                    Debug.Log($"House placed at: {hitResult.point}");
 
-    //                 loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
-    //             }
-    //         }
-    //     }
+                    loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
+                }
+            }
+        }
 
-        
-    // }
+
+    }
 
     public void HandlePlacement()
     {
