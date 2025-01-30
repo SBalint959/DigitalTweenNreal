@@ -10,6 +10,7 @@ public class HouseItemListDisplay : MonoBehaviour
     [SerializeField] private HouseMover houseMover;
     [SerializeField] private JSONSender jsonSender;
     [SerializeField] private GPSReceiver gpsReceiver;
+    
 
     public void InitializeHouseItems(List<BlueprintsInfo.Item> houseItems)
     {

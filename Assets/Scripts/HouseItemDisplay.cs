@@ -15,12 +15,13 @@ public class HouseItemDisplay : MonoBehaviour
 
     public GameObject parentGO;   // The ParentGO (root of the house model)
 
-    public GameObject LockCanvas;
+    private GameObject LockCanvas;
     private BlueprintsInfo.Item houseItem;
     private LoginManager loginManager;
     private HouseMover houseMover;
     private JSONSender jsonSender;
     private GPSReceiver.GPSData gpsData;
+    private GameObject lockControllerObject;
 
     private bool spawningHouse;
 
@@ -54,6 +55,17 @@ public class HouseItemDisplay : MonoBehaviour
         }
 
         parentGO = GameObject.FindGameObjectWithTag("Parent");
+        lockControllerObject = GameObject.FindGameObjectWithTag("LockController");
+        // LockCanvas = GameObject.FindGameObjectWithTag("LockCanvas");
+
+        // if (LockCanvas == null)
+        // {
+        //     Debug.LogError("LockCanvas not found! Ensure it has the tag 'LockCanvas'.");
+        // }
+        // else {
+        //     LockCanvas.SetActive(false);
+        //     Debug.Log("LockCanvas is now inactive.");
+        // }
 
         if (parentGO == null)
         {
@@ -71,32 +83,28 @@ public class HouseItemDisplay : MonoBehaviour
 
             //Alternative house spawning
             loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
-            RemoveParentFollower();
+            // RemoveParentFollower();
             housePlacementController.centerParent();
 
             //Raycast house spawning
             //HandlePlacement();
             
             createButton.gameObject.SetActive(false);
-            lockButton.gameObject.SetActive(true);
-            lockButton.onClick.AddListener(OnLockButtonClicked);
+            // LockCanvas.SetActive(true);
+
+            LockController lockController = lockControllerObject.GetComponent<LockController>();
+
+
+            // Call the ActivateLockPosition function
+            
+            lockController.ActivateLockCanvas();
+            gameObject.transform.parent.gameObject.SetActive(false);
+            
+
         }
     }
 
-    private void OnLockButtonClicked()
-    {
-        // disable house movement
-        houseMover.isHouseLocked = true;
-        // get geolocation
-        // put geolocation inside the house json
-        string json = loginManager.getActiveHouseJSON();
-        //.Replace("−", "-");
-        // send final json to server
-        string finalJson = "{\"GPS\":{\"X\":" + gpsData.X.ToString() + ",\"Z\":" + gpsData.Z.ToString() + "}," + json.Substring(1);
-        jsonSender.SendJSON("model.json", finalJson);
-        createButton.gameObject.SetActive(true);
-        lockButton.gameObject.SetActive(false);
-    }
+    // }
 
     void Update()
     {

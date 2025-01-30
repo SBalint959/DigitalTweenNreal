@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class LockSendGPS : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private HouseMover houseMover;
+    [SerializeField] private JSONSender jsonSender;
+    [SerializeField] private GPSReceiver gpsReceiver;
+    [SerializeField] private LoginManager loginManager;
+
 
     // Update is called once per frame
-    void Update()
+
+    // gpsReceiver.gpsData
+    public void OnLockButtonClicked()
     {
-        
+        // disable house movement
+        houseMover.isHouseLocked = true;
+        // get geolocation
+        // put geolocation inside the house json
+        string json = loginManager.getActiveHouseJSON();
+        //.Replace("−", "-");
+        // send final json to server
+        string finalJson = "{\"GPS\":{\"X\":" + gpsReceiver.gpsData.X.ToString() + ",\"Z\":" + gpsReceiver.gpsData.Z.ToString() + "}," + json.Substring(1);
+        jsonSender.SendJSON("model.json", finalJson);
+
+        gameObject.SetActive(false);
     }
 }

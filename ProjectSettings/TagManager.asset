@@ -10,6 +10,7 @@ TagManager:
   - HousePlace
   - LockButton
   - LockCanvas
+  - LockController
   layers:
   - Default
   - TransparentFX
