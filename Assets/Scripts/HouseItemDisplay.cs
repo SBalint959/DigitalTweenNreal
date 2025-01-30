@@ -12,9 +12,10 @@ public class HouseItemDisplay : MonoBehaviour
     [SerializeField] private Button createButton;
     [SerializeField] private Button lockButton;
 
-    public GameObject dummyPlane; // Assign a dummy plane for testing
+
     public GameObject parentGO;   // The ParentGO (root of the house model)
 
+    public GameObject LockCanvas;
     private BlueprintsInfo.Item houseItem;
     private LoginManager loginManager;
     private HouseMover houseMover;
@@ -53,17 +54,12 @@ public class HouseItemDisplay : MonoBehaviour
         }
 
         parentGO = GameObject.FindGameObjectWithTag("Parent");
-        // dummyPlane = GameObject.FindGameObjectWithTag("Plane");
 
         if (parentGO == null)
         {
             Debug.LogError("ParentGO not found! Ensure it has the tag 'Parent'.");
         }
 
-        // if (dummyPlane == null)
-        // {
-        //     Debug.LogError("DummyPlane not found! Ensure it has the tag 'Plane'.");
-        // }
     }
 
     private void OncreateButtonClicked()
@@ -72,8 +68,15 @@ public class HouseItemDisplay : MonoBehaviour
         {
             Debug.Log(id.text);
             Debug.Log("Button inside!");
+
+            //Alternative house spawning
             loginManager.GetBlueprint(houseItem.id.ToString(), houseItem.name);
+            RemoveParentFollower();
+            housePlacementController.centerParent();
+
+            //Raycast house spawning
             //HandlePlacement();
+            
             createButton.gameObject.SetActive(false);
             lockButton.gameObject.SetActive(true);
             lockButton.onClick.AddListener(OnLockButtonClicked);
@@ -146,20 +149,24 @@ public class HouseItemDisplay : MonoBehaviour
         // housePlacementController.HandlePlacement(houseItem.id.ToString(), houseItem.name);
     }
 
-    /// <summary>
-    /// Triggers the JSONParser to invoke house generation.
-    /// </summary>
-    // private void TriggerHouseGeneration()
-    // {
-    //     if (jsonParser != null)
-    //     {
-    //         // Simulate the house generation by re-invoking the JSONParser's parsing process
-    //         jsonParser.ParseJson(jsonParser.GetCurrentJson()); // Assumes JSONPasrser has a way to get the current JSON
-    //         Debug.Log("House generation triggered via JSONParser.");
-    //     }
-    //     else
-    //     {
-    //         Debug.LogError("JSONParser reference is not assigned!");
-    //     }
-    // }
+    public void RemoveParentFollower()
+    {
+        if (parentGO == null)
+        {
+            Debug.LogError("Target object is null. Cannot remove component.");
+            return;
+        }
+
+        // Attempt to find and remove the ParentFollower component
+        var parentFollower = parentGO.GetComponent("ParentFollower");
+        if (parentFollower != null)
+        {
+            Destroy(parentFollower);
+            Debug.Log($"ParentFollower component removed from {parentGO.name}.");
+        }
+        else
+        {
+            Debug.Log($"ParentFollower component not found on {parentGO.name}.");
+        }
+    }
 }

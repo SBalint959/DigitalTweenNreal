@@ -18,10 +18,10 @@ public class HouseManager : MonoBehaviour
 
     private void moveHouse(HouseInfo houseInfo)
     {
-        Debug.LogWarning("TU SAM " + houseInfo.Items.Count);
-        foreach (Item item in houseInfo.Items)
-        {
-            Debug.Log(item.Type + " " + item.Name + ": position " + item.Position + "; orientation " + item.Orientation);
-        }
+        // Debug.LogWarning("TU SAM " + houseInfo.Items.Count);
+        // foreach (Item item in houseInfo.Items)
+        // {
+        //     Debug.Log(item.Type + " " + item.Name + ": position " + item.Position + "; orientation " + item.Orientation);
+        // }
     }
 }

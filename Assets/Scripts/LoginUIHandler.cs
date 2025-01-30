@@ -11,6 +11,7 @@ public class LoginUIHandler : MonoBehaviour
     [SerializeField] private TMP_InputField usernameField; 
     [SerializeField] private TMP_InputField passwordField;
     [SerializeField] private Button loginButton;
+    // [SerializeField] private GameObject lockCanvas;
 
     private LoginManager loginManager;
     private HouseItemListDisplay houseDisplay;
@@ -19,6 +20,7 @@ public class LoginUIHandler : MonoBehaviour
     {
         loginCanvas.SetActive(true);
         housePickCanvas.SetActive(false);
+        // lockCanvas.SetActive(false);
 
         loginManager = GetComponent<LoginManager>();
         houseDisplay = housePickCanvas.GetComponent<HouseItemListDisplay>();
@@ -80,7 +82,7 @@ public class LoginUIHandler : MonoBehaviour
     {
         Debug.Log("Success!");
         Debug.Log(blueprintsInfo.data.blueprints.totalCount);
-        Debug.Log(houseDisplay);
+        // Debug.Log(houseDisplay);
         if (houseDisplay != null)
         {
             houseDisplay.InitializeHouseItems(blueprintsInfo.data.blueprints.items);

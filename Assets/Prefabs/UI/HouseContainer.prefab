@@ -569,7 +569,6 @@ MonoBehaviour:
   username: {fileID: 1647831726575741580}
   createButton: {fileID: 4861356372082653333}
   lockButton: {fileID: 6360657445271171903}
-  dummyPlane: {fileID: 0}
   parentGO: {fileID: 0}
   housePlacementController: {fileID: 5662406091318241488, guid: c0a42beaad35a17408e9ab1149eade2b,
     type: 3}

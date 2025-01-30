@@ -3,74 +3,68 @@ using NRKernal;
 
 public class HousePlacementController : MonoBehaviour
 {
-    public GameObject dummyPlane; // Assign a dummy plane for testing
-    public GameObject parentGO;   // The ParentGO (root of the house model)
+    private GameObject HousePlace;
+    private GameObject parentGO;
     private LoginManager loginManager;
     private bool spawningHouse;
     private string idLocal;
     private string nameLocal;
 
-    void Start()
-    {
-        // Find ParentGO and DummyPlane by their tags
-        parentGO = GameObject.FindGameObjectWithTag("Parent");
-        dummyPlane = GameObject.FindGameObjectWithTag("Plane");
+    // void Start()
+    // {
 
-        if (parentGO == null)
-        {
-            Debug.LogError("ParentGO not found! Ensure it has the tag 'Parent'.");
-        }
+    // }
+    // void Update() {
+    //     // Debug.Log($"{spawningHouse}");
 
-        if (dummyPlane == null)
-        {
-            Debug.LogError("DummyPlane not found! Ensure it has the tag 'Plane'.");
-        }
-    }
-    void Update() {
-        // Debug.Log($"{spawningHouse}");
+    //     if (spawningHouse) {
+    //         Debug.Log("Spawning house");
+    //         if (!NRInput.GetButtonDown(ControllerButton.TRIGGER))
+    //         {
+    //             Debug.Log($"Trigger not clicked");
+    //             return;
+    //         }
+    //         Debug.Log($"Trigger clicked");
+    //         var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
+    //         Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
 
-        if (spawningHouse) {
-            Debug.Log("Spawning house");
-            if (!NRInput.GetButtonDown(ControllerButton.TRIGGER))
-            {
-                Debug.Log($"Trigger not clicked");
-                return;
-            }
-            Debug.Log($"Trigger clicked");
-            var handControllerAnchor = NRInput.DomainHand == ControllerHandEnum.Left ? ControllerAnchorEnum.LeftLaserAnchor : ControllerAnchorEnum.RightLaserAnchor;
-            Transform laserAnchor = NRInput.AnchorsHelper.GetAnchor(NRInput.RaycastMode == RaycastModeEnum.Gaze ? ControllerAnchorEnum.GazePoseTrackerAnchor : handControllerAnchor);
+    //         // Perform a raycast
+    //         RaycastHit hitResult;
+    //         if (Physics.Raycast(new Ray(laserAnchor.position, laserAnchor.forward), out hitResult, 10))
+    //         {
+    //             if (hitResult.collider != null && hitResult.collider.gameObject == dummyPlane)
+    //             {
+    //                 // Move ParentGO to the hit position
+    //                 parentGO.transform.position = hitResult.point;
+    //                 parentGO.transform.rotation = Quaternion.identity; // Optional: Align to the plane's rotation
 
-            // Perform a raycast
-            RaycastHit hitResult;
-            if (Physics.Raycast(new Ray(laserAnchor.position, laserAnchor.forward), out hitResult, 10))
-            {
-                if (hitResult.collider != null && hitResult.collider.gameObject == dummyPlane)
-                {
-                    // Move ParentGO to the hit position
-                    parentGO.transform.position = hitResult.point;
-                    parentGO.transform.rotation = Quaternion.identity; // Optional: Align to the plane's rotation
+    //                 Debug.Log($"House placed at: {hitResult.point}");
 
-                    Debug.Log($"House placed at: {hitResult.point}");
-
-                    loginManager.GetBlueprint(idLocal, nameLocal);
-                }
-            }
-        }
+    //                 loginManager.GetBlueprint(idLocal, nameLocal);
+    //             }
+    //         }
+    //     }
 
         
+    // }
+
+    public void centerParent() {
+        Invoke("HandlePlacement", 0.5f);
     }
 
-    public void HandlePlacement(string id, string name)
+    public void HandlePlacement()
     {
 
-        // Debug.Log($"Inside HandlePlacement");
+        parentGO = GameObject.FindGameObjectWithTag("Parent");
+        HousePlace = GameObject.FindGameObjectWithTag("HousePlace");
+        Vector3 currentPosition = HousePlace.transform.position;
+        Quaternion currentRotation = HousePlace.transform.rotation;
+        Debug.Log("Centering house");
 
-        spawningHouse = true;
+        parentGO.transform.position = new Vector3(currentPosition.x, -1, currentPosition.z);
 
-        idLocal = id;
-        nameLocal = name;
-        Debug.Log($"spawningHouse is now: {spawningHouse}");
-        // Debug.Log($"Plane: {parentGO.name}");
+        // Set rotation, keeping x and z unchanged, setting only y to 0
+        parentGO.transform.rotation = Quaternion.Euler(0, currentRotation.eulerAngles.y, 0);
 
     }
 }

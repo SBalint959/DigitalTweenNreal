@@ -54,7 +54,7 @@ public class Generator : MonoBehaviour
         CreateWalls(HouseInfo.Walls);
         CreateAttic(HouseInfo.Attic);
         //call CenterHouse after 0.5 seconds
-        Invoke("CenterHouse", 0.5f);
+        // Invoke("CenterHouse", 0.5f);
     }
 
     /// <summary>
