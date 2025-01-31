@@ -916,7 +916,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 892907266}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1158179960}
+        m_TargetAssemblyTypeName: LockSendGPS, Assembly-CSharp
+        m_MethodName: OnLockButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 130003534}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &892907266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -967,6 +991,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95f4eb94a34a45a47984f311a95be8a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  houseMover: {fileID: 0}
+  jsonSender: {fileID: 0}
+  gpsReceiver: {fileID: 0}
+  loginManager: {fileID: 0}
 --- !u!1 &1062371071 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8491811674784396630, guid: c4481ce959d2c7943a2973d45cfda7d9,
@@ -1002,6 +1030,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   url: https://diplomskiserver.onrender.com/upload
   jsonDummy: '{"GPS":{"X":45.812480,"Z":15.956624},"Attic":{"Roof":{"Pitch":0,"Position":{"R":0,"X":0,"Y":0,"Z":3200},"Dimension":{"X":10548,"Y":7216,"Z":240}},"Floor":null,"AtticSegments":[]},"Floor":{"Position":{"R":0,"X":0,"Y":0,"Z":-240},"Dimension":{"X":10548,"Y":7216,"Z":240}},"Items":[],"Walls":[{"Doors":[],"Windows":[{"Position":{"R":0,"X":1512,"Y":0,"Z":1000},"Dimension":{"X":1200,"Y":0,"Z":1000}}],"Position":{"R":90,"X":0,"Y":0,"Z":0},"Dimension":{"X":7016,"Y":200,"Z":3200}},{"Doors":[],"Windows":[{"Position":{"R":0,"X":4520,"Y":0,"Z":1000},"Dimension":{"X":1200,"Y":0,"Z":1000}},{"Position":{"R":0,"X":6099,"Y":0,"Z":1000},"Dimension":{"X":1200,"Y":0,"Z":1000}}],"Position":{"R":0,"X":0,"Y":7216,"Z":0},"Dimension":{"X":10348,"Y":200,"Z":3200}},{"Doors":[],"Windows":[{"Position":{"R":0,"X":4642,"Y":0,"Z":1000},"Dimension":{"X":1200,"Y":0,"Z":1000}}],"Position":{"R":-90,"X":10548,"Y":7216,"Z":0},"Dimension":{"X":7016,"Y":200,"Z":3200}},{"Doors":[{"Position":{"R":0,"X":8951,"Y":0,"Z":60},"Dimension":{"X":850,"Y":0,"Z":2200}}],"Windows":[],"Position":{"R":180,"X":10548,"Y":0,"Z":0},"Dimension":{"X":10348,"Y":200,"Z":3200}},{"Doors":[{"Position":{"R":0,"X":3509,"Y":0,"Z":60},"Dimension":{"X":850,"Y":0,"Z":2200}}],"Windows":[],"Position":{"R":0,"X":199,"Y":3940,"Z":0},"Dimension":{"X":10148,"Y":80,"Z":3200}},{"Doors":[{"Position":{"R":0,"X":1667,"Y":0,"Z":60},"Dimension":{"X":850,"Y":0,"Z":2200}}],"Windows":[],"Position":{"R":90,"X":8536,"Y":3940,"Z":0},"Dimension":{"X":3076,"Y":80,"Z":3200}},{"Doors":[{"Position":{"R":0,"X":505,"Y":0,"Z":60},"Dimension":{"X":850,"Y":0,"Z":2200}}],"Windows":[],"Position":{"R":90,"X":3389,"Y":3940,"Z":0},"Dimension":{"X":3076,"Y":80,"Z":3200}}]}'
+--- !u!1 &1158179957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1158179959}
+  - component: {fileID: 1158179958}
+  - component: {fileID: 1158179960}
+  m_Layer: 0
+  m_Name: LockController
+  m_TagString: LockController
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1158179958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158179957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a8bdec2b6ab24940acc4f07a615beeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockCanvas: {fileID: 130003534}
+--- !u!4 &1158179959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158179957}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.046694666, y: 0.011211976, z: 0.52088505}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1158179960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158179957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f4eb94a34a45a47984f311a95be8a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  houseMover: {fileID: 1278487921}
+  jsonSender: {fileID: 1062371076}
+  gpsReceiver: {fileID: 1062371074}
+  loginManager: {fileID: 1315268088}
 --- !u!1 &1215074182 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1668515225578100, guid: 665d8158924bd2648a94fb3f87691bbb,

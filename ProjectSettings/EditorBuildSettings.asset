@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Login.unity
-    guid: 000b0a9d756043e40873f57b71d21fe6
-  - enabled: 0
     path: Assets/Scenes/Geolocation.unity
     guid: d883b03883a3c314fa57d9ffa637fa81
+  - enabled: 0
+    path: Assets/Scenes/Login.unity
+    guid: 000b0a9d756043e40873f57b71d21fe6
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 744b813df90924c169af73489b8325de,
       type: 2}
