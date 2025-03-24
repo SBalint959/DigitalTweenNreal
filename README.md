@@ -1,4 +1,6 @@
 # DigitalTweenNreal
+An AR project created using Unity as part of a subject at FER (Faculty of Electrical engeneering and computing).
+
 This project consists of two Unity applications that work together to place a house model in the real world and send its data and geographical coordinates to a Python Flask server. The first app is made for NReal Light AR glasses and works with placing the model in the real-world environment. Since the AR glasses don't have an embedded GPS system, we developed a simple mobile app, used to send geographical coordinates of the user to the NReal app using a Flask server. There is another app that takes the model data from the Flask server and recreates it in a Digital Twin, but since we did not develop the app, it is not here as a part of this project.
 
 ![Login](https://github.com/user-attachments/assets/e7d5a319-9da3-4247-bd2e-e753d368eb31)
