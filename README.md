@@ -1,5 +1,5 @@
 # DigitalTweenNreal
-This project consists of two Unity applications that work together to place a house model in the real world and send its data and geographical coordinates to a Python Flask server. The first app is made for NReal Light AR glasses and works with placing the model in the real-world environment. Since the AR glasses don't have an embedded GPS system, we developed a simple mobile app, used to send geographical coordinates of the user to the NReal app. There is another app that takes the model data from the Flask server and recreates it in a Digital Twin, but since we did not develop the app, it is not here as a part of this project. The system uses another Flask server to store the geographical coordinates of the user so the NReal app can read and use them accordingly.
+This project consists of two Unity applications that work together to place a house model in the real world and send its data and geographical coordinates to a Python Flask server. The first app is made for NReal Light AR glasses and works with placing the model in the real-world environment. Since the AR glasses don't have an embedded GPS system, we developed a simple mobile app, used to send geographical coordinates of the user to the NReal app using a Flask server. There is another app that takes the model data from the Flask server and recreates it in a Digital Twin, but since we did not develop the app, it is not here as a part of this project.
 
 ## Project Overview
 ### Components
@@ -17,11 +17,39 @@ This project consists of two Unity applications that work together to place a ho
 ## Instalation and Setup
 Clone the repository 
 1. Mobile App (Android)
-   - Upload the "Geolocation.apk" app from the Build folder onto your Android smartphone
+   - Upload the "Geolocation.apk" app from the Build folder onto an Android smartphone
    - Open the app on your Android smartphone
 2. AR App (NReal Light Glasses)
-   - If you want to test the app in the Unity Editor or on a PC start the "DigitalTween.apk" app
-   - If you want to use it on the NReal Light AR glasses, upload the "DigitalTweenPlaneDetector.apk" app onto your AR glasses and start it
-## API Endpoints
-### POST /send
-- Description: Receives GPS
+   - For testing the app on a PC start the "DigitalTween.apk" app
+   - For use on the NReal Light AR glasses, upload the "DigitalTweenPlaneDetector.apk" app onto your AR glasses and start it
+## Use of the Server
+- To change which server contains the GPS coordinate data, modify the *serverUrl* variable in the *GPSSender.cs* and *GPSReceiver.cs* scripts inside the *Assets/Scripts* folder
+### API Endpoints
+1. POST /send
+   - Sends the GPS coordinates from the mobile app
+   - Request Body example (JSON):
+     ```
+     {
+        "X": 45.812,
+        "Z": 15.956
+     }
+     ```
+   - Response example:
+     ```
+     {"message": "Location received!"}
+     ```
+2. GET /get
+   - Gets the GPS coordiantes from the server (used in the NReal app)
+   - Response example:
+     ```
+     {
+        "X": 45.812,
+        "Z": 15.956
+     }
+     ```
+## Future Improvements
+- Improve security
+- Add real-time updates of GPS coordinates such as WebSockets instead of polling
+- Touch up the UI for both applications
+- Migrate to newer AR glasses for more features such as a built in GPS and better tracking
+     
